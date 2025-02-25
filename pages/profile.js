@@ -19,6 +19,7 @@ export default function Profile() {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [formSubmitting, setFormSubmitting] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (!token) {
@@ -49,12 +50,14 @@ export default function Profile() {
     const onSubmit = async (data) => {
         setFormSubmitting(true);
         setSuccessMessage('');
+        setError('');
         try {
             await changePassword(data.currentPassword, data.newPassword);
             setSuccessMessage('Password changed successfully');
             reset({ currentPassword: '', newPassword: '' });
         } catch (error) {
-            showToast(error.message, "error");
+
+            setError(error.message);
         } finally {
             setFormSubmitting(false);
         }
@@ -207,7 +210,13 @@ export default function Profile() {
                                             <CheckCircle size={18} />
                                             {successMessage}
                                         </div>
-                                    )}
+                                        )}
+                                        {error && (
+                                            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-300 flex items-center gap-2">
+                                                <CheckCircle size={18} />
+                                                {error}
+                                            </div>
+                                        )}
 
                                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                         <div>
