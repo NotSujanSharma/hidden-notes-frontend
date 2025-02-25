@@ -6,22 +6,27 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
     const token = useAuthStore((state) => state.token);
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState('');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
-            document.documentElement.classList.add(savedTheme);
-        }
+        setMounted(true);
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        document.documentElement.classList.add(savedTheme);
     }, []);
+    
+    if (!mounted) {
+        return null;
+    }
 
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
         localStorage.setItem('theme', newTheme);
-        document.documentElement.classList.toggle('dark');
+        document.documentElement.classList.remove(theme);
+        document.documentElement.classList.add(newTheme);
     };
 
     const toggleMobileMenu = () => {
@@ -123,19 +128,19 @@ export default function Navbar() {
                             {token ? (
                                 <>
                                     <Link href="/dashboard" legacyBehavior>
-                                        <a className="block px-4 py-2 rounded-lg hover:bg-indigo-900/50 dark:hover:bg-indigo-900/50 text-indigo-200 dark:text-indigo-200 flex items-center gap-2">
+                                        <a className=" px-4 py-2 rounded-lg hover:bg-indigo-900/50 dark:hover:bg-indigo-900/50 text-indigo-200 dark:text-indigo-200 flex items-center gap-2">
                                             <LayoutDashboard size={18} />
                                             <span>Dashboard</span>
                                         </a>
                                     </Link>
                                     <Link href="/profile" legacyBehavior>
-                                        <a className="block px-4 py-2 rounded-lg hover:bg-indigo-900/50 dark:hover:bg-indigo-900/50 text-indigo-200 dark:text-indigo-200 flex items-center gap-2">
+                                        <a className=" px-4 py-2 rounded-lg hover:bg-indigo-900/50 dark:hover:bg-indigo-900/50 text-indigo-200 dark:text-indigo-200 flex items-center gap-2">
                                             <User size={18} />
                                             <span>Profile</span>
                                         </a>
                                     </Link>
                                     <Link href="/logout" legacyBehavior>
-                                        <a className="block px-4 py-2 rounded-lg hover:bg-indigo-900/50 dark:hover:bg-indigo-900/50 text-indigo-200 dark:text-indigo-200 flex items-center gap-2">
+                                        <a className=" px-4 py-2 rounded-lg hover:bg-indigo-900/50 dark:hover:bg-indigo-900/50 text-indigo-200 dark:text-indigo-200 flex items-center gap-2">
                                             <LogOut size={18} />
                                             <span>Logout</span>
                                         </a>

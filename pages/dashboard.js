@@ -27,7 +27,6 @@ export default function Dashboard() {
                     setMessages(messagesData);
                 } catch (error) {
                     console.error("Error fetching data:", error);
-                    // Using a more subtle notification approach
                     showToast(error.message, "error");
                 } finally {
                     setLoading(false);
@@ -48,6 +47,16 @@ export default function Dashboard() {
         } finally {
             setRefreshing(false);
         }
+    };
+
+    const formatDate = (date) => {
+        return new Date(date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     };
 
     const copyToClipboard = () => {
@@ -298,7 +307,7 @@ export default function Dashboard() {
                                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200">
                                                                 {message.category}
                                                             </span>
-                                                            <span>{new Date(message.created_at).toLocaleString()}</span>
+                                                            <span>{formatDate(message.created_at)}</span>
                                                             <span className={`flex items-center ${message.is_read
                                                                 ? 'text-gray-500 dark:text-indigo-400'
                                                                 : 'text-blue-500 dark:text-blue-300 font-medium'}`}>
