@@ -28,8 +28,8 @@ const apiFetch = async (endpoint, method = 'GET', body = null, auth = false) => 
     return response.json();
 };
 
-export const register = (email, password) =>
-    apiFetch('/api/register', 'POST', { email, password });
+export const register = (name,email, password) =>
+    apiFetch('/api/register', 'POST', {name, email, password });
 
 export const login = (email, password) =>
     apiFetch('/api/login', 'POST', { email, password });

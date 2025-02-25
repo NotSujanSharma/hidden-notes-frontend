@@ -18,7 +18,7 @@ export default function Register() {
     const onSubmit = async (data) => {
         setError('');
         try {
-            await registerUser(data.email, data.password);
+            await registerUser(data.name, data.email, data.password);
             setSuccess(true);
             setTimeout(() => {
                 router.push('/login');
@@ -133,6 +133,34 @@ export default function Register() {
                         )}
 
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-gray-700 dark:text-indigo-200">
+                                    Full Name
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <UserPlus size={18} className="text-gray-400 dark:text-indigo-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        {...formRegister('name', {
+                                            required: 'Full name is required',
+                                            minLength: {
+                                                value: 2,
+                                                message: 'Name must be at least 2 characters'
+                                            }
+                                        })}
+                                        className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-indigo-700 rounded-lg bg-gray-50 dark:bg-indigo-950/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 outline-none transition-colors"
+                                        placeholder="John Doe"
+                                    />
+                                </div>
+                                {errors.name && (
+                                    <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+                                        <AlertCircle size={14} />
+                                        {errors.name.message}
+                                    </p>
+                                )}
+                            </div>
                             <div className="space-y-1">
                                 <label className="text-sm font-medium text-gray-700 dark:text-indigo-200">
                                     Email
