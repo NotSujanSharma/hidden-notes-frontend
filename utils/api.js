@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://api.hiddennotes.xyz';
 
 const apiFetch = async (endpoint, method = 'GET', body = null, auth = false) => {
     const headers = {

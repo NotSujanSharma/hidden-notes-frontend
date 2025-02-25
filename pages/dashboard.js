@@ -68,7 +68,7 @@ export default function Dashboard() {
 
     const copyToClipboard = () => {
         if (link) {
-            navigator.clipboard.writeText(`https://example.com/s/${link.link_id}`);
+            navigator.clipboard.writeText(`https://hiddennotes.xyz/s/${link.link_id}`);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }
@@ -199,7 +199,7 @@ export default function Dashboard() {
 
                                             <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-indigo-950/50 rounded-lg border border-gray-200 dark:border-indigo-800 overflow-hidden">
                                                 <div className="truncate flex-1 font-mono text-sm text-gray-800 dark:text-indigo-200">
-                                                    https://example.com/s/{link.link_id}
+                                                    https://hiddennotes.xyz/s/{link.link_id}
                                                 </div>
                                                 <button
                                                     onClick={copyToClipboard}
@@ -246,7 +246,7 @@ export default function Dashboard() {
                                                         const shareData = {
                                                             title: 'Send me anonymous messages',
                                                             text: 'Send me anonymous feedback or messages!',
-                                                            url: `https://example.com/s/${link.link_id}`
+                                                            url: `https://hiddennotes.xyz/s/${link.link_id}`
                                                         };
                                                         if (navigator.share && navigator.canShare(shareData)) {
                                                             navigator.share(shareData);
