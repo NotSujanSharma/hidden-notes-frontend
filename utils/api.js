@@ -1,4 +1,4 @@
-const BASE_URL = 'https://api.hiddennotes.xyz';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.hiddennotes.xyz';
 
 const apiFetch = async (endpoint, method = 'GET', body = null, auth = false) => {
     const headers = {
