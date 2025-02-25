@@ -225,7 +225,7 @@ export default function Profile() {
                                                 <input
                                                     type={showPassword ? "text" : "password"}
                                                     {...formRegister('currentPassword', { required: 'Current password is required' })}
-                                                    className={`w-full px-4 py-3 rounded-lg border ${errors.currentPassword ? 'border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-indigo-700 bg-white dark:bg-indigo-950/50'} focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:text-white`}
+                                                    className={`w-full px-4 py-3 rounded-lg border text-black ${errors.currentPassword ? 'border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-indigo-700 bg-white dark:bg-indigo-950/50'} focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:text-white`}
                                                     placeholder="Enter your current password"
                                                 />
                                                 <button
@@ -248,7 +248,7 @@ export default function Profile() {
                                                         required: 'New password is required',
                                                         minLength: { value: 8, message: 'Password must be at least 8 characters' },
                                                     })}
-                                                    className={`w-full px-4 py-3 rounded-lg border ${errors.newPassword ? 'border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-indigo-700 bg-white dark:bg-indigo-950/50'} focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:text-white`}
+                                                    className={`w-full px-4 py-3 rounded-lg border text-black ${errors.newPassword ? 'border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-indigo-700 bg-white dark:bg-indigo-950/50'} focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:text-white`}
                                                     placeholder="Enter your new password"
                                                 />
                                                 <button
