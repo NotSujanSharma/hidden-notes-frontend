@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.8",
     "@tailwindcss/postcss": "^4.0.8",
     "framer-motion": "^12.4.7",
     "lucide-react": "^0.475.0",
