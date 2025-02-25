@@ -14,6 +14,11 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
+    // Pagination and sorting states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [sortOrder, setSortOrder] = useState('desc'); // 'desc' or 'asc'
+    const messagesPerPage = 5;
+
     useEffect(() => {
         if (!token) {
             router.push('/login');
@@ -41,6 +46,8 @@ export default function Dashboard() {
         try {
             const messagesData = await getMessages();
             setMessages(messagesData);
+            // Reset to first page when refreshing
+            setCurrentPage(1);
         } catch (error) {
             console.error("Error refreshing messages:", error);
             showToast(error.message, "error");
@@ -61,7 +68,7 @@ export default function Dashboard() {
 
     const copyToClipboard = () => {
         if (link) {
-            navigator.clipboard.writeText(`https://example.com/submit/${link.link_id}`);
+            navigator.clipboard.writeText(`https://example.com/s/${link.link_id}`);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }
@@ -71,6 +78,45 @@ export default function Dashboard() {
     const showToast = (message, type) => {
         // This would ideally use a toast library
         alert(message);
+    };
+
+    // Toggle sort order between ascending and descending
+    const toggleSortOrder = () => {
+        setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+        // Reset to first page when changing sort order
+        setCurrentPage(1);
+    };
+
+    // Get current page of messages
+    const getCurrentPageMessages = () => {
+        // Sort messages
+        const sortedMessages = [...messages].sort((a, b) => {
+            const dateA = new Date(a.created_at);
+            const dateB = new Date(b.created_at);
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+        });
+
+        // Get current page slice
+        const indexOfLastMessage = currentPage * messagesPerPage;
+        const indexOfFirstMessage = indexOfLastMessage - messagesPerPage;
+        return sortedMessages.slice(indexOfFirstMessage, indexOfLastMessage);
+    };
+
+    // Pagination controls
+    const totalPages = Math.ceil(messages.length / messagesPerPage);
+    const goToNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+    const goToPreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+    const goToViewAll = () => {
+        // not implemented yet
+        router.push('/messages');
     };
 
     if (!token) return null;
@@ -153,7 +199,7 @@ export default function Dashboard() {
 
                                             <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-indigo-950/50 rounded-lg border border-gray-200 dark:border-indigo-800 overflow-hidden">
                                                 <div className="truncate flex-1 font-mono text-sm text-gray-800 dark:text-indigo-200">
-                                                    https://example.com/submit/{link.link_id}
+                                                    https://example.com/s/{link.link_id}
                                                 </div>
                                                 <button
                                                     onClick={copyToClipboard}
@@ -163,7 +209,7 @@ export default function Dashboard() {
                                                     {copied ? <Check size={18} /> : <Copy size={18} />}
                                                 </button>
                                                 <a
-                                                    href={`/submit/${link.link_id}`}
+                                                    href={`/s/${link.link_id}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="p-2 text-gray-500 dark:text-indigo-300 hover:text-blue-500 dark:hover:text-blue-400 bg-white dark:bg-indigo-800 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
@@ -200,7 +246,7 @@ export default function Dashboard() {
                                                         const shareData = {
                                                             title: 'Send me anonymous messages',
                                                             text: 'Send me anonymous feedback or messages!',
-                                                            url: `https://example.com/submit/${link.link_id}`
+                                                            url: `https://example.com/s/${link.link_id}`
                                                         };
                                                         if (navigator.share && navigator.canShare(shareData)) {
                                                             navigator.share(shareData);
@@ -259,8 +305,13 @@ export default function Dashboard() {
                                             <button onClick={refreshMessages} className="p-2 text-gray-600 dark:text-indigo-300 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-indigo-800 rounded-lg transition-colors">
                                                 <RefreshCw size={18} className={refreshing ? "animate-spin" : ""} />
                                             </button>
-                                            <button className="p-2 text-gray-600 dark:text-indigo-300 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-indigo-800 rounded-lg transition-colors">
+                                            <button
+                                                onClick={toggleSortOrder}
+                                                className="p-2 text-gray-600 dark:text-indigo-300 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-indigo-800 rounded-lg transition-colors flex items-center gap-1"
+                                                title={sortOrder === 'desc' ? "Newest first" : "Oldest first"}
+                                            >
                                                 <Filter size={18} />
+                                                <span className="text-xs font-medium">{sortOrder === 'desc' ? 'Desc' : 'Asc'}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -289,7 +340,7 @@ export default function Dashboard() {
                                         animate="visible"
                                         className="divide-y divide-gray-200 dark:divide-indigo-800"
                                     >
-                                        {messages.map((message) => (
+                                        {getCurrentPageMessages().map((message) => (
                                             <motion.div
                                                 key={message.message_id}
                                                 variants={itemVariants}
@@ -338,8 +389,34 @@ export default function Dashboard() {
                                 )}
 
                                 {messages.length > 0 && (
-                                    <div className="p-4 border-t border-gray-200 dark:border-indigo-800 bg-gray-50 dark:bg-indigo-950/50 flex justify-center">
-                                        <button className="px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">
+                                    <div className="p-4 border-t border-gray-200 dark:border-indigo-800 bg-gray-50 dark:bg-indigo-950/50 flex justify-between items-center">
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={goToPreviousPage}
+                                                disabled={currentPage === 1}
+                                                className={`px-3 py-1.5 text-sm font-medium rounded-md ${currentPage === 1
+                                                    ? 'text-gray-400 dark:text-indigo-600 cursor-not-allowed'
+                                                    : 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-800/50'}`}
+                                            >
+                                                Previous
+                                            </button>
+                                            <span className="text-sm text-gray-600 dark:text-indigo-300">
+                                                Page {currentPage} of {totalPages}
+                                            </span>
+                                            <button
+                                                onClick={goToNextPage}
+                                                disabled={currentPage === totalPages}
+                                                className={`px-3 py-1.5 text-sm font-medium rounded-md ${currentPage === totalPages
+                                                    ? 'text-gray-400 dark:text-indigo-600 cursor-not-allowed'
+                                                    : 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-800/50'}`}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                        <button
+                                            onClick={goToViewAll}
+                                            className="hidden px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium hover:bg-indigo-100 dark:hover:bg-indigo-800/50 rounded-md"
+                                        >
                                             View All Messages
                                         </button>
                                     </div>

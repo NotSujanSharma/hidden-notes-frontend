@@ -54,7 +54,7 @@ my-app/
 │   ├── login.js          # Login page
 |   |── logout.js         # Logout
 │   ├── dashboard.js      # Dashboard (protected)
-│   ├── submit/           # Dynamic route for message submission
+│   ├── s/           # Dynamic route for message submission
 │   │   └── [link_id].js
 │   └── profile.js        # Profile page (protected)
 ├── store/                # Zustand stores for state management
@@ -139,7 +139,7 @@ npm run start
 - Lists received messages with category, timestamp, and read status.
 - Includes a copy-to-clipboard button for the link.
 
-### 4. Message Submission Page (`/submit/[link_id]`)
+### 4. Message Submission Page (`/s/[link_id]`)
 
 - Public page for submitting anonymous messages.
 - Includes message content, category selection, and CAPTCHA verification.
